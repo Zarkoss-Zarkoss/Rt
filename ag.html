@@ -206,6 +206,30 @@
         }
 
         function redirectToWhatsAppGroup() {
+            const fullName = document.getElementById('outputFullName').textContent;
+            const email = document.getElementById('outputEmail').textContent;
+            const phoneNumber = document.getElementById('outputPhoneNumber').textContent;
+            const loanAmount = document.getElementById('outputLoanAmount').textContent;
+            const interestRate = document.getElementById('outputInterestRate').textContent;
+            const loanTerm = document.getElementById('outputLoanTerm').textContent;
+            const totalRepayment = document.getElementById('outputTotalRepayment').textContent;
+            const startTime = document.getElementById('outputStartTime').textContent;
+            const endTime = document.getElementById('outputEndTime').textContent;
+
+            const loanDetails = `
+                Loan Application Details:
+                Full Name: ${fullName}
+                Email: ${email}
+                Phone Number: ${phoneNumber}
+                Loan Amount: ₹${loanAmount}
+                Weekly Interest Rate: ${interestRate}%
+                Loan Term (weeks): ${loanTerm}
+                Total Repayment Amount: ₹${totalRepayment}
+                Start Time: ${startTime}
+                End Time: ${endTime}
+            `;
+
+            
             const whatsappGroupLink = 'https://chat.whatsapp.com/BZQK64rAqpr7aGFSe3ufBX'; // Replace with your WhatsApp group link
             window.location.href = whatsappGroupLink;
         }
