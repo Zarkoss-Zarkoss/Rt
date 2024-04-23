@@ -107,10 +107,11 @@
             <p><strong>Weekly Interest Rate:</strong> <span id="outputInterestRate"></span>%</p>
             <p><strong>Loan Term (weeks):</strong> <span id="outputLoanTerm"></span></p>
             <p><strong>Total Repayment Amount:</strong> ₹<span id="outputTotalRepayment"></span></p>
-            <p><strong>Generated Time:</strong> <span id="generatedTime"></span></p>
-            <p><strong>End Time:</strong> <span id="endTime"></span></p>
-            <button onclick="downloadLoanDetails('png')">Download as PNG Image</button>
-            <button onclick="downloadLoanDetails('pdf')">Download as PDF</button>
+            <p><strong>Start Time:</strong> <span id="outputStartTime"></span></p>
+            <p><strong>End Time:</strong> <span id="outputEndTime"></span></p>
+            <button onclick="downloadLoanDetails()">Download Application Details</button>
+            <button onclick="sendWhatsAppMessage()">Send Application via WhatsApp</button>
+            <button onclick="redirectToWhatsAppGroup()">Join WhatsApp Group</button>
         </div>
     </div>
 
@@ -129,6 +130,10 @@
             // Calculate total repayment amount
             const totalRepayment = loanAmount * (1 + (weeklyInterestRate / 100) * loanTermWeeks);
 
+            // Generate start and end times (for example, current time + loan term in weeks)
+            const startTime = new Date().toLocaleString();
+            const endTime = new Date(Date.now() + loanTermWeeks * 7 * 24 * 60 * 60 * 1000).toLocaleString();
+
             // Display loan application details
             document.getElementById('outputFullName').textContent = fullName;
             document.getElementById('outputEmail').textContent = email;
@@ -137,22 +142,14 @@
             document.getElementById('outputInterestRate').textContent = weeklyInterestRate.toFixed(2);
             document.getElementById('outputLoanTerm').textContent = loanTermWeeks;
             document.getElementById('outputTotalRepayment').textContent = totalRepayment.toFixed(2);
+            document.getElementById('outputStartTime').textContent = startTime;
+            document.getElementById('outputEndTime').textContent = endTime;
 
             // Show loan details section
             document.getElementById('loanDetails').style.display = 'block';
-
-            // Display generated time
-            const generatedTime = new Date().toLocaleString();
-            document.getElementById('generatedTime').textContent = generatedTime;
-
-            // Calculate end time based on loan term
-            const endDate = new Date();
-            endDate.setDate(endDate.getDate() + (loanTermWeeks * 7)); // Calculate end date in days
-            const endTime = endDate.toLocaleDateString();
-            document.getElementById('endTime').textContent = endTime;
         }
 
-        async function downloadLoanDetails(format) {
+        function downloadLoanDetails() {
             const fullName = document.getElementById('outputFullName').textContent;
             const email = document.getElementById('outputEmail').textContent;
             const phoneNumber = document.getElementById('outputPhoneNumber').textContent;
@@ -160,8 +157,8 @@
             const interestRate = document.getElementById('outputInterestRate').textContent;
             const loanTerm = document.getElementById('outputLoanTerm').textContent;
             const totalRepayment = document.getElementById('outputTotalRepayment').textContent;
-            const generatedTime = document.getElementById('generatedTime').textContent;
-            const endTime = document.getElementById('endTime').textContent;
+            const startTime = document.getElementById('outputStartTime').textContent;
+            const endTime = document.getElementById('outputEndTime').textContent;
 
             const loanDetails = `
                 Loan Application Details:
@@ -172,28 +169,45 @@
                 Weekly Interest Rate: ${interestRate}%
                 Loan Term (weeks): ${loanTerm}
                 Total Repayment Amount: ₹${totalRepayment}
-                Generated Time: ${generatedTime}
+                Start Time: ${startTime}
                 End Time: ${endTime}
             `;
 
-            if (format === 'pdf') {
-                // Generate and download PDF on Android devices
-                const { jsPDF } = await import('jspdf');
-                const pdf = new jsPDF();
-                pdf.text(loanDetails, 10, 10);
-                pdf.save('loan_application_details.pdf');
-            } else if (format === 'png') {
-                // Generate and download PNG image
-                const html2canvas = await import('html2canvas');
-                const loanDetailsContainer = document.getElementById('loanDetails');
-                html2canvas.default(loanDetailsContainer).then(function(canvas) {
-                    const image = canvas.toDataURL('image/png');
-                    const link = document.createElement('a');
-                    link.href = image;
-                    link.download = 'loan_application_details.png';
-                    link.click();
-                });
-            }
+            const filename = 'loan_application_details.txt';
+            const blob = new Blob([loanDetails], { type: 'text/plain' });
+            const link = document.createElement('a');
+
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function sendWhatsAppMessage() {
+            const fullName = document.getElementById('outputFullName').textContent;
+            const phoneNumber = '+918336939566'; // Add +91 (India country code) to the phone number
+            const loanAmount = document.getElementById('outputLoanAmount').textContent;
+            const interestRate = document.getElementById('outputInterestRate').textContent;
+            const loanTerm = document.getElementById('outputLoanTerm').textContent;
+            const totalRepayment = document.getElementById('outputTotalRepayment').textContent;
+
+            const message = `
+                Loan Application:
+                Name: ${fullName}
+                Loan Amount: ₹${loanAmount}
+                Interest Rate: ${interestRate}%
+                Loan Term (weeks): ${loanTerm}
+                Total Repayment: ₹${totalRepayment}
+            `;
+
+            const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappLink, '_blank');
+        }
+
+        function redirectToWhatsAppGroup() {
+            const whatsappGroupLink = 'https://chat.whatsapp.com/group-link-here'; // Replace with your WhatsApp group link
+            window.location.href = whatsappGroupLink;
         }
     </script>
 </body>
