@@ -191,6 +191,9 @@
             const interestRate = document.getElementById('outputInterestRate').textContent;
             const loanTerm = document.getElementById('outputLoanTerm').textContent;
             const totalRepayment = document.getElementById('outputTotalRepayment').textContent;
+            const startTime = document.getElementById('outputStartTime').textContent;
+            const endTime = document.getElementById('outputEndTime').textContent;
+
 
             const message = `
                 Loan Application:
@@ -199,6 +202,8 @@
                 Interest Rate: ${interestRate}%
                 Loan Term (weeks): ${loanTerm}
                 Total Repayment: ₹${totalRepayment}
+                Start Time: ${startTime}
+                End Time: ${endTime}                  
             `;
 
             const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -231,7 +236,7 @@
 
             
             const whatsappGroupLink = 'https://chat.whatsapp.com/BZQK64rAqpr7aGFSe3ufBX'; // Replace with your WhatsApp group link
-            window.location.href = whatsappGroupLink;
+            window.location.href = 'https://chat.whatsapp.com/BZQK64rAqpr7aGFSe3ufBX';
         }
     </script>
 </body>
